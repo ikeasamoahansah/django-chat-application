@@ -1,0 +1,11 @@
+<html>
+    <title>Room Creation</title>
+
+    <body>
+        <form method='post'>
+            {% csrf_token %}
+            <input type="text" placeholder="Enter a name" name="name" />
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+</html>
