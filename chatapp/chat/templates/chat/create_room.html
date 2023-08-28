@@ -4,7 +4,7 @@
     <body>
         <form method='post'>
             {% csrf_token %}
-            <input type="text" placeholder="Enter a name" name="name" />
+            {{form}}
             <button type="submit">Submit</button>
         </form>
     </body>
