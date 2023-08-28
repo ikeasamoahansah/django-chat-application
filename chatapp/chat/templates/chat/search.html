@@ -1,0 +1,14 @@
+<h1>Search results for "{{query}}" </h1>
+
+<h2>Rooms</h2>
+{%if rooms %}
+    <ul>
+        {%for room in rooms%}
+            <li>
+                <a href="{% url 'room' room.id %}">{{room.name}}</a>
+            </li>
+        {%endfor%}
+    </ul>
+{%else%}
+    <p>No rooms found.</p>
+{%endif%}
