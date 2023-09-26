@@ -1,6 +1,6 @@
 <html>
     <title>Room</title>
-
+    <h1>Chat!</h1>
     <body>        
         <div id="chat-messages"></div>
         <input id="message-input" type="text">
@@ -9,6 +9,7 @@
   
   <script>
     const roomId = "{{ room_id }}";
+    const user = "{{ user }}"
     const chatSocket = new WebSocket(
       `ws://${window.location.host}/ws/room/${roomId}/`
     );
@@ -28,7 +29,9 @@
       const messageInput = document.querySelector('#message-input');
       const message = messageInput.value;
       chatSocket.send(JSON.stringify({
-        'message': message
+        'message': message,
+        'sender': user,
+        'room': roomId,
       }));
       messageInput.value = '';
     };

@@ -1,24 +1,26 @@
 import json
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Message, Room
+from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User
 
-class ChatConsumer(WebsocketConsumer):
+class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f"chat_{self.room_name}"
+        self.room_name = self.scope['url_route']['kwargs']['room_id']
+        self.room_group_name = 'chat_%s' % self.room_name
 
-        await self.accept()
 
-        await self.get_room()
+        # await self.get_room()
 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
 
-        self.message.reply_channel.send({"accept": True})
+        await self.accept()
+        # self.message.reply_channel.send({"accept": True})
 
-    async def disconnect(self, close_code):
+    async def disconnect(self):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -28,16 +30,18 @@ class ChatConsumer(WebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        sender_id = self.scope["user"].id
+        sender = text_data_json['sender']
+        room = text_data_json['room']
 
-        await self.save_message(sender_id, message)
+        await self.save_message(sender, room, message)
 
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'message': message,
-                'sender': self.scope["user"].username
+                'sender': sender,
+                'room': room,
             }
         )
     
@@ -49,10 +53,13 @@ class ChatConsumer(WebsocketConsumer):
             'sender': event['sender']
         }))
 
-    async def get_room(self):
-        self.room = Room.objects.get(id=self.room_name)
+    @sync_to_async
+    def get_room(self):
+        return Room.objects.get(id=self.room_name)
 
-    async def save_message(self, sender_id, message):
-        message = Message.objects.create(sender=sender_id, content=message)
+    @sync_to_async
+    def save_message(self, sender, room, message):
+        room = Room.objects.get(id=room)
+        user = User.objects.get(username=sender)
 
-        await self.room.messages.add(message)
+        message = Message.objects.create(sender=user, room=room, content=message)

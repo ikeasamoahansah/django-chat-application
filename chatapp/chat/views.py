@@ -29,7 +29,9 @@ def create_room(request):
 
 @login_required(login_url='/login')
 def room(request, pk):
-    return render(request, 'chat/room.html', {"room_id": pk})
+    room = Room.objects.get(id=pk)
+    messages = Message.objects.filter(room=room)[0:25]
+    return render(request, 'chat/room.html', {"room_id": pk, "user": request.user.username, "messages": messages})
         
 
 def signup(request):
