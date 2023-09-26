@@ -1,22 +1,17 @@
-<html>
-    <title>My Chat</title>
+{% extends "chat/base.html" %}
+  
+    {% block body %}
 
+    <form method="get" action="{% url 'search' %}">
+        <input type="text" name="q" placeholder="Search..." required>
+        <button type="submit">Search</button>
+    </form>
 
-    <body>
-
-        <form method="get" action="{% url 'search' %}">
-            <input type="text" name="q" placeholder="Search..." required>
-            <button type="submit">Search</button>
-        </form>
-
-        {%for room in rooms%}
-            {%if room.creator == request.user%}
-                <a href={%url 'room' room.id %}><h2>{{room.name}}</h2></a>
-            {%endif%}
-        {%endfor%}
-
-        
-    </body>
+    {%for room in rooms%}
+        {%if room.creator == request.user%}
+            <a href={%url 'room' room.id %}><h2>{{room.name}}</h2></a>
+        {%endif%}
+    {%endfor%}
 
     
-</html>
+    {% endblock %}

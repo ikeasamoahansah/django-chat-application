@@ -1,11 +1,8 @@
-<html>
-    <title>Room Creation</title>
-
-    <body>
+{% extends "chat/base.html" %}
+    {% block body %}
         <form method='post'>
             {% csrf_token %}
             {{form}}
             <button type="submit">Submit</button>
         </form>
-    </body>
-</html>
+    {% endblock %}
