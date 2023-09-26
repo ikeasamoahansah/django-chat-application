@@ -1,14 +1,36 @@
-{% comment %} Tailwind {% endcomment %}
+{% extends "chat/base.html" %}
 
-<html>
-    <title>Room</title>
-    <h1>Chat!</h1>
-    <body>        
-        <div id="chat-messages"></div>
-        <input id="message-input" type="text">
-        <button id="send-button">Send</button>
-    </body>
-  
+{% block title %}Messages |{% endblock %}
+
+{% block body %}
+<div class="p-10 lg:p-20 text-center">
+  <h1 class="text-3xl lg:text-6xl text-white">{{room.name}}</h1>
+</div>
+
+<div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+  <div class="chat-messages space-y-3" id="chat-messages">
+    {% for message in messages%}
+    <div class="p-4 bg-gray-200 rounded-xl">
+      <p class="font-semibold">{{message.sender}}</p>
+      <p>{{message.content}}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="lg:w-2/4 mx-4 mt-6 lg:mx-auto p-4 bg-white rounded-xl">
+  <form method="post" class="flex">
+    {% csrf_token %}
+    <input type="text" name="content" class="flex-1 mr-3" placeholder="Your message..." id="message-input">
+
+    <button type="submit" id="send-button" class="px-5 py-3 rounded-xl text-white bg-blue-400 hover:bg-blue-300">
+      Send
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
   <script>
     const roomId = "{{ room_id }}";
     const user = "{{ user }}"
@@ -21,13 +43,23 @@
       const message = data.message;
       const sender = data.sender;
       
-      const chatMessages = document.querySelector('#chat-messages');
-      const messageElement = document.createElement('div');
-      messageElement.innerText = `${sender}: ${message}`;
-      chatMessages.appendChild(messageElement);
+      if (message) {
+        let html = '<div class="p-4 bg-gray-200 rounded-xl">';
+            html += '<p class="font-semibold">' + sender + '</p>';
+            html += '<p>' + message + '</p></div>';
+
+          document.querySelector('#chat-messages').innerHTML += html;
+      } else {
+        alert('The message was empty')
+      }
     };
 
-    document.querySelector('#send-button').onclick = function () {
+    chatSocket.onclose = function (e) {
+      console.log('closed');
+    }
+
+    document.querySelector('#send-button').onclick = function (e) {
+      e.preventDefault();
       const messageInput = document.querySelector('#message-input');
       const message = messageInput.value;
       chatSocket.send(JSON.stringify({
@@ -36,6 +68,7 @@
         'room': roomId,
       }));
       messageInput.value = '';
+      return false;
     };
   </script>
-</html>
+{% endblock %}

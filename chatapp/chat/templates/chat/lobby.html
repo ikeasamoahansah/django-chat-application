@@ -27,7 +27,7 @@
                         <div class="p-4 bg-white shadow rounded-xl text-center">
                             <h2 class="mb-5 text-2xl font-semibold">{{room.name}}</h2>
     
-                            <a href="{{room.id}}" class="px-5 py-3 block rounded-xl text-white bg-blue-400 hover:bg-blue-300">Join</a>
+                            <a href={% url 'room' room.id %} class="px-5 py-3 block rounded-xl text-white bg-blue-400 hover:bg-blue-300">Join</a>
                         </div>
                     </div>
                     {%else%}
