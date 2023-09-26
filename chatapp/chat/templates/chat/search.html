@@ -1,3 +1,6 @@
+{% extends "chat/base.html" %}
+
+{% block body %}
 <h1>Search results for "{{query}}" </h1>
 
 <h2>Rooms</h2>
@@ -12,3 +15,4 @@
 {%else%}
     <p>No rooms found.</p>
 {%endif%}
+{% endblock %}
