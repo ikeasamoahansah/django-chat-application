@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application</title>
+    <title>{%block title%}{%endblock%}Django Chat</title>
     {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" /> {% endcomment %}
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
     <nav class="bg-white-100 shadow">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between">
@@ -52,8 +52,8 @@
             <a href="/products" class="block py-2 px-4 text-sm hover:bg-gray-200" >Trendy</a>
             <a href="/products" class="block py-2 px-4 text-sm hover:bg-gray-200" >New Arrivals</a>
         </div>
-        </nav>
-        {%block body%}
-        {%endblock%}
+    </nav>
+    {%block body%}
+    {%endblock%}
 </body>
 </html>
