@@ -33,7 +33,7 @@
 {% block scripts %}
   <script>
     const roomId = "{{ room_id }}";
-    const user = "{{ user }}"
+    const sender = "{{ sender }}"
     const chatSocket = new WebSocket(
       `ws://${window.location.host}/ws/room/${roomId}/`
     );
@@ -64,7 +64,7 @@
       const message = messageInput.value;
       chatSocket.send(JSON.stringify({
         'message': message,
-        'sender': user.username,
+        'sender': sender,
         'room': roomId,
       }));
       messageInput.value = '';
