@@ -31,7 +31,7 @@ def create_room(request):
 def room(request, pk):
     room = Room.objects.get(id=pk)
     messages = Message.objects.filter(room=room)[0:25]
-    return render(request, 'chat/room.html', {"room_id": pk, "user": request.user.username, "messages": messages})
+    return render(request, 'chat/room.html', {"room_id": pk, "user": request.user, "messages": messages})
         
 
 def signup(request):
